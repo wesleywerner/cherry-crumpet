@@ -84,6 +84,7 @@ function ProcessRequest (req, res, form, callback) {
                 var sliceTo = sliceFrom + max;
 
                 var result = { };
+                result.max = max;
                 result.page = page;
                 result.next = (data.length > sliceTo) ? page + 1 : page;
                 result.prev = (page > 0) ? page - 1 : 0;
