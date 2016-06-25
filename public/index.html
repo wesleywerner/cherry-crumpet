@@ -9,6 +9,7 @@
       <ul id="postlist"></ul>
 
       <hr>
+      <a id="permalink">permalink</a>
       <p id="post"></p>
     	
     	<hr>
@@ -48,7 +49,7 @@
                 a.setAttribute('href', '#')
                 a.innerHTML = post.title;
                 a.onclick = function() {
-                  loadpost(post.key);
+                  loadpost(post);
                 }
                 var li = document.createElement('li');
                 li.appendChild(a);
@@ -59,11 +60,12 @@
         }
       
         function loadpost (e) {
-          PostRequest("/api/get", { "key": e }, function(err, data) {
+          PostRequest("/api/get", { "key": e.key }, function(err, data) {
             if (err) {
               document.getElementById('err').innerHTML = err;
             }
             else {
+              document.getElementById('permalink').setAttribute('href', '#'+e.key);
               document.getElementById('post').innerHTML = data;
             }
           });
