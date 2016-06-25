@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title> </title>
+    </head>
+    <body>
+      
+      <h1>Posts</h1>
+      <ul id="postlist"></ul>
+
+      <hr>
+      <p id="post"></p>
+    	
+    	<hr>
+      <p id="err" style="color:red"></p>
+      <pre id="raw"></pre>
+    	
+      <script>
+      
+        function PostRequest(url, data, callback) {
+          var r = new XMLHttpRequest(); 
+          r.open("POST", url, true); 
+          r.onreadystatechange = function () {
+            // wait until the request is Done
+            if (r.readyState != 4) return;
+            // Test the success code
+            if (r.status == 200) {
+              callback(null, r.responseText);
+            }
+            else {
+              callback(r.responseText);
+            }
+          }; 
+          r.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+          r.send(JSON.stringify(data));
+        }
+      
+        function listposts() {
+          PostRequest("/api/list", null, function(err, data) {
+            if (err) {
+              document.getElementById('err').innerHTML = err;
+            }
+            else {
+              document.getElementById('raw').innerHTML = data;
+              var list = JSON.parse(data);
+              list.forEach(function (post) {
+                var a = document.createElement('a');
+                a.setAttribute('href', '#')
+                a.innerHTML = post.title;
+                a.onclick = function() {
+                  loadpost(post.key);
+                }
+                var li = document.createElement('li');
+                li.appendChild(a);
+                document.getElementById('postlist').appendChild(li);
+              });
+            }
+          });
+        }
+      
+        function loadpost (e) {
+          PostRequest("/api/get", { 'name': e}, function(err, data) {
+            if (err) {
+              document.getElementById('err').innerHTML = err;
+            }
+            else {
+              document.getElementById('post').innerHTML = data;
+            }
+          });
+        }
+        
+        listposts();
+      
+      </script>
+      
+    </body>
+</html>
