@@ -23,7 +23,11 @@
           page: 0,
           max: 3
         };
-      
+        
+        // This helper function performs a POST request
+        // and calls back when the request completed.
+        // The callback should receive parameters as
+        // func (err, data)
         function PostRequest(url, data, callback) {
           var r = new XMLHttpRequest(); 
           r.open("POST", url, true); 
