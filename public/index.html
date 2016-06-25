@@ -36,14 +36,14 @@
         }
       
         function listposts() {
-          PostRequest("/api/list", null, function(err, data) {
+          PostRequest("/api/list", { 'page':0, 'max':5 }, function(err, data) {
             if (err) {
               document.getElementById('err').innerHTML = err;
             }
             else {
               document.getElementById('raw').innerHTML = data;
-              var list = JSON.parse(data);
-              list.forEach(function (post) {
+              var result = JSON.parse(data);
+              result.posts.forEach(function (post) {
                 var a = document.createElement('a');
                 a.setAttribute('href', '#')
                 a.innerHTML = post.title;
@@ -59,7 +59,7 @@
         }
       
         function loadpost (e) {
-          PostRequest("/api/get", { 'name': e}, function(err, data) {
+          PostRequest("/api/get", { "key": e }, function(err, data) {
             if (err) {
               document.getElementById('err').innerHTML = err;
             }
