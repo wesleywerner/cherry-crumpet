@@ -1,12 +1,25 @@
 var fs = require('fs');
 var url = require('url');
 var http = require('http');
+var readline = require('readline');
 var sanitize = require("sanitize-filename");
 var marked = require('marked');
-var serveStatic = require('serve-static')
-var finalhandler = require('finalhandler')
+var serveStatic = require('serve-static');
+var finalhandler = require('finalhandler');
 
-var serve = serveStatic('public', {'index': ['index.html', 'index.htm']})
+var config = { };
+var serve = serveStatic('public', {'index': ['index.html', 'index.htm']});
+
+// Load configuration
+fs.readFile('app.json', 'utf8', function (err, data) {
+    if (err) {
+        console.log(err);
+    }
+    else {
+        config = JSON.parse(data);
+        console.log('read config:'+data);
+    }
+});
 
 function listener(req, res) {
 
@@ -70,8 +83,6 @@ function ProcessRequest (req, res, form, callback) {
                 var sliceFrom = page * max;
                 var sliceTo = sliceFrom + max;
 
-                console.log('slicing from '+sliceFrom+' to '+sliceTo);
-                
                 var result = { };
                 result.page = page;
                 result.next = (data.length > sliceTo) ? page + 1 : page;
@@ -157,13 +168,21 @@ function namify(filelist) {
 
         // Remove the file extension
         title = title.replace(/\.md$/, '');
-
-        result.push({
+        
+        var postItem = {
             'title': title,
             'key': file,
-            'date': (isdate ? dateval : '')
-        });
-
+            'date': (isdate ? dateval : ''),
+            'lead': ''
+        };
+        
+        if (config.leads) {
+            var array = fs.readFileSync('public/posts/'+file).toString().split('\n');
+            if (array.length > 0) postItem.lead = array[0];
+        }
+        
+        result.push(postItem);
+        
     }
 
     return result;
