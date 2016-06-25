@@ -155,9 +155,6 @@ function namify(filelist) {
             title = file;
         }
 
-        // Replace dashes
-        title = title.replace(/-/g, ' ');
-
         // Remove the file extension
         title = title.replace(/\.md$/, '');
 
