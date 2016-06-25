@@ -7,6 +7,7 @@
       
       <h1>Posts</h1>
       <ul id="postlist"></ul>
+      <a href="#" onclick="goPrevPage()">Prev Page</a>..<a href="#" onclick="goNextPage()">Next Page</a>
 
       <hr>
       <a id="permalink">permalink</a>
@@ -17,6 +18,11 @@
       <pre id="raw"></pre>
     	
       <script>
+      
+        var view = { 
+          page: 0,
+          max: 3
+        };
       
         function PostRequest(url, data, callback) {
           var r = new XMLHttpRequest(); 
@@ -37,16 +43,29 @@
         }
       
         function listposts() {
-          PostRequest("/api/list", { 'page':0, 'max':5 }, function(err, data) {
+          PostRequest("/api/list", { 'page':view.page, 'max':view.max }, function(err, data) {
             if (err) {
               document.getElementById('err').innerHTML = err;
             }
             else {
+              
+              // Display the raw data received
               document.getElementById('raw').innerHTML = data;
+
+              // Clear the current post list
+              document.getElementById('postlist').innerHTML = '';
+              
+              // Parse the data into a js object
               var result = JSON.parse(data);
+
+              // read the returned page number
+              view = result;
+              
+              // render each post item 
               result.posts.forEach(function (post) {
                 var a = document.createElement('a');
                 a.setAttribute('href', '#')
+                a.setAttribute('title', post.lead);
                 a.innerHTML = post.title;
                 a.onclick = function() {
                   loadpost(post);
@@ -55,6 +74,7 @@
                 li.appendChild(a);
                 document.getElementById('postlist').appendChild(li);
               });
+              
             }
           });
         }
@@ -69,6 +89,16 @@
               document.getElementById('post').innerHTML = data;
             }
           });
+        }
+        
+        function goPrevPage() {
+          view.page = view.prev;
+          listposts();
+        }
+        
+        function goNextPage() {
+          view.page = view.next;
+          listposts();
         }
         
         listposts();
