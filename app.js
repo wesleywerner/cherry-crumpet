@@ -1,4 +1,5 @@
 var fs = require('fs');
+var path = require('path');
 var url = require('url');
 var http = require('http');
 var readline = require('readline');
@@ -11,7 +12,7 @@ var config = { };
 var serve = serveStatic('public', {'index': ['index.html', 'index.htm']});
 
 // Load configuration
-fs.readFile('app.json', 'utf8', function (err, data) {
+fs.readFile(path.join(__dirname, 'app.json'), 'utf8', function (err, data) {
     if (err) {
         console.log(err);
     }
@@ -72,7 +73,7 @@ function ProcessRequest (req, res, form, callback) {
             // TODO Cache the post list in memory.
             // Refresh the list every n calls, or if n minutes old.
             
-            fs.readdir('public/posts', function(err, data) {
+            fs.readdir(path.join(__dirname, 'public/posts'), function(err, data) {
                 if (err) return callback(err);
 
                 data.sort();
@@ -100,7 +101,7 @@ function ProcessRequest (req, res, form, callback) {
                 return callback({'message':'no post key given'});
             }
             
-            var filename = 'public/posts/' + sanitize(postdata.key);
+            var filename = path.join(__dirname, 'public/posts', sanitize(postdata.key));
             
             ReadPost(res, filename, function (err, data) {
                 if (err) {
@@ -178,7 +179,7 @@ function namify(filelist) {
         };
         
         if (config.leads) {
-            var array = fs.readFileSync('public/posts/'+file).toString().split('\n');
+            var array = fs.readFileSync(path.join(__dirname, 'public/posts', file)).toString().split('\n');
             if (array.length > 0) postItem.lead = array[0];
         }
         
