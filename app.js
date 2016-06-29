@@ -192,4 +192,4 @@ function namify(filelist) {
 }
 
 var server = http.createServer(listener);
-server.listen(process.env.PORT);
+server.listen(process.env.PORT || 3000);
