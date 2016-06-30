@@ -76,7 +76,7 @@ function ProcessRequest (req, res, form, callback) {
             fs.readdir(path.join(__dirname, 'public/posts'), function(err, data) {
                 if (err) return callback(err);
 
-                data.sort();
+                data.sort().reverse();
 
                 // calculate pagination values
                 var page = postdata.page || 0;
