@@ -14,7 +14,7 @@
     view.listPosts();
   };
   
-  view.post = ko.observable('');
+  view.post = ko.observable(null);
   view.posts = ko.observableArray([]);
   view.page = ko.observable(0);
   view.prev = ko.observable(0);
@@ -74,7 +74,9 @@
         alert(err);
       }
       else {
-        view.post(data);
+        var er = ko.toJS(e);
+        er.body = data;
+        view.post(er);
         //document.getElementById('permalink').setAttribute('href', '#'+e.key);
         //document.getElementById('post').innerHTML = data;
       }
@@ -82,7 +84,7 @@
   }
   
   view.clearPost = function () {
-    view.post('');
+    view.post(null);
   }
   
   view.goPrevPage = function () {

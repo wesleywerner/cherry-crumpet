@@ -60,25 +60,25 @@
 
 
     <!-- Posts List -->
-    <div data-bind="visible: post() == ''">
+    <div data-bind="visible: post() == null">
       <div data-bind="foreach: posts">
         <div class="jumbotron" >
-          <h1 data-bind="text: title">...</h1>
+          <h2><span data-bind="text: title"></span> <small data-bind="text: moment(date()).fromNow(), attr: {'title': moment(date()).calendar() }"></small></h2>
           <p data-bind="text: lead">...</p>
           <p><a class="btn btn-primary btn-lg" href="#" role="button" data-bind="click: function(){view.loadPost($data)}">Read more</a></p>
         </div>
       </div>
       <!-- Pagination Buttons -->
-      <button class="btn btn-default" data-bind="enable: page() != prev(), click: goPrevPage"><i class="glyphicon glyphicon-chevron-left"></i> Older</button>
-      <button class="btn btn-default" data-bind="enable: page() != next(), click: goNextPage"><i class="glyphicon glyphicon-chevron-right"></i> Newer</button>
+      <button class="btn btn-default" data-bind="enable: page() != next(), click: goNextPage"><i class="glyphicon glyphicon-chevron-left"></i> Older</button>
+      <button class="btn btn-default" data-bind="enable: page() != prev(), click: goPrevPage"><i class="glyphicon glyphicon-chevron-right"></i> Newer</button>
     </div>
 
     <!-- Single Post -->
-    <div data-bind="visible: post() != ''">
-        <div class="jumbotron" >
-          <h1 data-bind="text: 'title'">...</h1>
-          <p data-bind="html: post">...</p>
-          <p><a class="btn btn-primary btn-lg" href="#" role="button" data-bind="click: clearPost">Done</a></p>
+    <div data-bind="visible: post() != null">
+        <div class="jumbotron" data-bind="with: post()">
+          <h2><span data-bind="text: title"></span> <small data-bind="text: moment(date).fromNow(), attr: {'title': moment(date).calendar() }"></small></h2>
+          <p data-bind="html: body">...</p>
+          <p><a class="btn btn-primary btn-lg" href="#" role="button" data-bind="click: view.clearPost">Done</a></p>
         </div>
     </div>
     
@@ -91,6 +91,7 @@
   <script src="bootstrap/bootstrap.min.js"></script>
   <script src="knockout/knockout.js"></script>
   <script src="knockout/knockout.mapping.min.js"></script>
+  <script src="moment/moment.min.js"></script>
   <script src="view.js"></script>
   
   </body>
