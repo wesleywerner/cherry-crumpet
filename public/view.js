@@ -10,7 +10,6 @@
   });
   
   view.loadSection = function (page) {
-    document.getElementById('foo').value = page;
     view.listPosts();
   };
   
