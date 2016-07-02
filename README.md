@@ -139,7 +139,11 @@ The file `app.json` provides configurable settings:
 
 * leads: Load the first line in each post as the lead text.
 
-# Modules used
+# Credit to other works
+
+### CSS Spinners
+
+jlong @github: https://github.com/jlong/css-spinners
 
 Cherry Crumpet uses these following npm modules.
 

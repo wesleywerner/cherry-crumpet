@@ -9,6 +9,9 @@
 
     <!-- Blog styles -->
     <link href="blog.css" rel="stylesheet">
+    
+    <!-- CSS Spinners -->
+    <link href="css-spinner/heartbeat.css" rel="stylesheet">
 
     <!-- Bootstrap -->
     <link href="bootstrap/bootstrap.min.css" rel="stylesheet">
@@ -65,7 +68,7 @@
 
 
     <!-- Posts List -->
-    <div v-show="!loading">
+    <div v-show="!loading" style="display:none">
       <div class="jumbotron" v-for="post in model.posts">
         <h2><a v-bind:name="post.key" v-bind:href="'#'+post.key">{{ post.title }}</a> <small title="{{ post.dateCalendar }}">{{ post.dateFromNow }}</small></h2>
         <template v-if="post.body">
@@ -74,15 +77,18 @@
         <template v-else>
           {{{ post.lead }}}
           <p>
-            <a class="btn btn-primary btn-lg" role="button" v-bind:href="'#'+post.key" v-bind:disabled="post.loading" v-on:click="loadPost($index)">Read more</a>
-            <span class="text-muted" v-show="post.loading">Loading...</span>
+            <a class="btn btn-primary btn-lg" role="button" v-bind:href="'#'+post.key" v-show="!post.loading" v-on:click="loadPost($index)">Read more</a>
           </p>
+          <!-- Loading -->
+          <div v-show="post.loading" class="well text-center">
+            <div class="heartbeat-loader"></div>
+          </div>
         </template>
       </div>
     </div>
     
     <!-- Pagination Buttons -->
-    <div v-show="!loading" class="form-inline text-center">
+    <div v-show="!loading" class="form-inline text-center" style="display:none">
       <button class="btn btn-default"
         v-bind:disabled="model.next === model.page" 
         v-on:click="goOlderPage">
@@ -97,8 +103,8 @@
     </div>
     
     <!-- Loading -->
-    <div v-show="loading" class="text-muted text-center">
-      Loading
+    <div v-show="loading" class="well text-center">
+      <div class="heartbeat-loader"></div>
     </div>
 
   </div>  <!-- /.container -->
