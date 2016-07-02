@@ -76,6 +76,7 @@ Path: `/api/list`
 
 * `page`: the pagination page number. First page is 0.
 * `max`: the maximum posts per page to return.
+* `key`: _optional_. Jump to the page that features this post key. This overrides the `page` parameter if the key is found. The idea is to provide easy permalinks by setting the key to `window.location.hash.slice(1)`, for example.
 
 If no parameters are posted, then all posts are returned on one page.
 
