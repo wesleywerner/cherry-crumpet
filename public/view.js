@@ -20,10 +20,10 @@
   
   // Store the post list data, and current post details
   cherry.model = { };
-  //cherry.posts = [ ];
-  //cherry.page = 0;
-  //cherry.prev = 0;
-  //cherry.next = 0;
+  
+  // Flag when posts are loading
+  cherry.loading = true;
+
   // Number of posts to list
   cherry.model.max = 3;
   
@@ -51,12 +51,14 @@
 
   cherry.listPosts = function () {
     
+    cherry.loading = true;
     var params = { };
     params.page = cherry.model.page || 0;
     params.max = cherry.model.max || 3;
     params.key = window.location.hash.slice(1);
     
     cherry.PostRequest("/api/list", params, function(err, data) {
+      cherry.loading = false;
       if (err) {
         alert(err);
       }

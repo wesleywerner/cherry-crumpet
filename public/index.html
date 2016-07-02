@@ -65,7 +65,7 @@
 
 
     <!-- Posts List -->
-    <div>
+    <div v-show="!loading">
       <div class="jumbotron" v-for="post in model.posts">
         <h2><a v-bind:name="post.key" v-bind:href="'#'+post.key">{{ post.title }}</a> <small title="{{ post.dateCalendar }}">{{ post.dateFromNow }}</small></h2>
         <template v-if="post.body">
@@ -82,7 +82,7 @@
     </div>
     
     <!-- Pagination Buttons -->
-    <div class="form-inline text-center">
+    <div v-show="!loading" class="form-inline text-center">
       <button class="btn btn-default"
         v-bind:disabled="model.next === model.page" 
         v-on:click="goOlderPage">
@@ -94,6 +94,11 @@
         v-on:click="goNewerPage">
         <i class="glyphicon glyphicon-chevron-right"></i> Newer
       </button>
+    </div>
+    
+    <!-- Loading -->
+    <div v-show="loading" class="text-muted text-center">
+      Loading
     </div>
 
   </div>  <!-- /.container -->
