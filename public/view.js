@@ -90,11 +90,13 @@
   }
   
   cherry.goNewerPage = function () {
+    window.location.hash = '';
     cherry.model.page = cherry.model.prev;
     cherry.listPosts();
   }
   
   cherry.goOlderPage = function () {
+    window.location.hash = '';
     cherry.model.page = cherry.model.next;
     cherry.listPosts();
   }
