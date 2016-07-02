@@ -82,16 +82,18 @@
     </div>
     
     <!-- Pagination Buttons -->
-    <div>
-      <a class="btn btn-default" role="button" 
-        v-show="model.next != model.page" 
-        v-on:click="goOlderPage" href="#">
-        <i class="glyphicon glyphicon-chevron-left"></i> Older</a>
-      <a class="btn btn-default" role="button" 
-        v-show="model.prev != model.page" 
-        v-on:click="goNewerPage" href="#">
-        <i class="glyphicon glyphicon-chevron-right"></i> Newer</a>
-      <div class="text-muted pull-right">Page {{ model.page + 1 }} </div>
+    <div class="form-inline text-center">
+      <button class="btn btn-default"
+        v-bind:disabled="model.next === model.page" 
+        v-on:click="goOlderPage">
+        <i class="glyphicon glyphicon-chevron-left"></i> Older
+      </button>
+      <label class="text-muted text-center">Page {{ model.page + 1 }} </label>
+      <button class="btn btn-default"
+        v-bind:disabled="model.prev == model.page" 
+        v-on:click="goNewerPage">
+        <i class="glyphicon glyphicon-chevron-right"></i> Newer
+      </button>
     </div>
 
   </div>  <!-- /.container -->
