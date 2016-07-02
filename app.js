@@ -77,10 +77,24 @@ function ProcessRequest (req, res, form, callback) {
                 if (err) return callback(err);
 
                 data.sort().reverse();
-
-                // calculate pagination values
+                
                 var page = postdata.page || 0;
                 var max = postdata.max || (data.length);
+
+                // optionally shift to the page beginning with a post key
+                if (postdata.key && postdata.key.length > 0) {
+                  //console.log('looking for key post: '+postdata.key);
+                  var postindex=data.length;
+                  for (;postindex;postindex--) {
+                    if (data[postindex] == postdata.key) {
+                      page = Math.floor(postindex / max);
+                      //console.log('key post found on page '+page);
+                      break;
+                    }
+                  }
+                }
+
+                // calculate pagination values
                 var sliceFrom = page * max;
                 var sliceTo = sliceFrom + max;
 

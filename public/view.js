@@ -51,9 +51,10 @@
 
   cherry.listPosts = function () {
     
-    var params = { page: cherry.model.page || 0, max: cherry.model.max || 3 };
-    
-    //alert(JSON.stringify(params));
+    var params = { };
+    params.page = cherry.model.page || 0;
+    params.max = cherry.model.max || 3;
+    params.key = window.location.hash.slice(1);
     
     cherry.PostRequest("/api/list", params, function(err, data) {
       if (err) {
