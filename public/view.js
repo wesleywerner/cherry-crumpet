@@ -73,6 +73,14 @@
           post.loading = false;
         });
         cherry.model = o;
+        
+        // scroll to key post
+        if (params.key) {
+          window.setTimeout(function() {
+          zenscroll.to(document.getElementById(params.key));
+        }, 500);
+        }
+        
       }
     });
   }

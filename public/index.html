@@ -66,11 +66,15 @@
       </div><!-- /.container-fluid -->
     </nav>
 
+    <!-- Loading -->
+    <div v-show="loading" class="well text-center">
+      <div class="heartbeat-loader"></div>
+    </div>
 
     <!-- Posts List -->
     <div v-show="!loading" style="display:none">
       <div class="jumbotron" v-for="post in model.posts">
-        <h2><a v-bind:name="post.key" v-bind:href="'#'+post.key">{{ post.title }}</a> <small title="{{ post.dateCalendar }}">{{ post.dateFromNow }}</small></h2>
+        <h2><a v-bind:id="post.key" v-bind:href="'#'+post.key">{{ post.title }}</a> <small title="{{ post.dateCalendar }}">{{ post.dateFromNow }}</small></h2>
         <template v-if="post.body">
           {{{ post.body }}}
         </template>
@@ -102,11 +106,6 @@
       </button>
     </div>
     
-    <!-- Loading -->
-    <div v-show="loading" class="well text-center">
-      <div class="heartbeat-loader"></div>
-    </div>
-
   </div>  <!-- /.container -->
 
   <footer class="blog-footer">
@@ -119,6 +118,7 @@
   <script src="bootstrap/bootstrap.min.js"></script>
   <script src="vue/vue.min.js"></script>
   <script src="moment/moment.min.js"></script>
+  <script src="js/zenscroll-min.js"></script>
   <script src="view.js"></script>
   
   </body>

@@ -145,7 +145,11 @@ The file `app.json` provides configurable settings:
 
 jlong @github: https://github.com/jlong/css-spinners
 
-Cherry Crumpet uses these following npm modules.
+### Zenscroll
+
+zengabor @github: https://zengabor.github.io/zenscroll/
+
+## Cherry Crumpet uses these following npm modules.
 
 ### File processing
 
