@@ -22,8 +22,8 @@
   </head>
   <body>
   
-  <div class="container">
-
+  <div class="container" id="cherry-app">
+    
     <nav class="navbar navbar-default">
       <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -42,9 +42,11 @@
           <!-- Page Navigation Dropdown -->
           <ul class="nav navbar-nav">
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><span  data-bind="text: section"></span> <span class="caret"></span></a>
-              <ul class="dropdown-menu" data-bind="foreach: pages">
-                <li data-bind="css: { 'active': $data == $parent.section() }"><a href="#" data-bind="text: $data, click: $parent.section">...</a></li>
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> {{ nav }} <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li v-for="page in pages" v-bind:class="{ 'active': page == nav }">
+                  <a href="#" v-on:click="navigate($index)">{{ page }}</a>
+                </li>
               </ul>
             </li>
           </ul>
@@ -63,28 +65,35 @@
 
 
     <!-- Posts List -->
-    <div data-bind="visible: post() == null">
-      <div data-bind="foreach: posts">
-        <div class="jumbotron" >
-          <h2><span data-bind="text: title"></span> <small data-bind="text: moment(date()).fromNow(), attr: {'title': moment(date()).calendar() }"></small></h2>
-          <p data-bind="text: lead">...</p>
-          <p><a class="btn btn-primary btn-lg" href="#" role="button" data-bind="click: function(){view.loadPost($data)}">Read more</a></p>
-        </div>
+    <div>
+      <div class="jumbotron" v-for="post in model.posts">
+        <h2><a v-bind:name="post.key" v-bind:href="'#'+post.key">{{ post.title }}</a> <small title="{{ post.dateCalendar }}">{{ post.dateFromNow }}</small></h2>
+        <template v-if="post.body">
+          {{{ post.body }}}
+        </template>
+        <template v-else>
+          <p>{{ post.lead }}</p>
+          <p>
+            <a class="btn btn-primary btn-lg" role="button" v-bind:href="'#'+post.key" v-bind:disabled="post.loading" v-on:click="loadPost($index)">Read more</a>
+            <span class="text-muted" v-show="post.loading">Loading...</span>
+          </p>
+        </template>
       </div>
-      <!-- Pagination Buttons -->
-      <button class="btn btn-default" data-bind="enable: page() != next(), click: goNextPage"><i class="glyphicon glyphicon-chevron-left"></i> Older</button>
-      <button class="btn btn-default" data-bind="enable: page() != prev(), click: goPrevPage"><i class="glyphicon glyphicon-chevron-right"></i> Newer</button>
-    </div>
-
-    <!-- Single Post -->
-    <div data-bind="visible: post() != null">
-        <div class="jumbotron" data-bind="with: post()">
-          <h2><span data-bind="text: title"></span> <small data-bind="text: moment(date).fromNow(), attr: {'title': moment(date).calendar() }"></small></h2>
-          <p data-bind="html: body">...</p>
-          <p><a class="btn btn-primary btn-lg" href="#" role="button" data-bind="click: view.clearPost">Done</a></p>
-        </div>
     </div>
     
+    <!-- Pagination Buttons -->
+    <div>
+      <a class="btn btn-default" role="button" 
+        v-bind:disabled="model.page != model.prev" 
+        v-on:click="goOlderPage" href="#">
+        <i class="glyphicon glyphicon-chevron-left"></i> Older</a>
+      <a class="btn btn-default" role="button" 
+        v-bind:disabled="model.page != model.next" 
+        v-on:click="goNewerPage" href="#">
+        <i class="glyphicon glyphicon-chevron-right"></i> Newer</a>
+      <div class="text-muted pull-right">Page {{ model.page + 1 }} </div>
+    </div>
+
   </div>  <!-- /.container -->
 
   <footer class="blog-footer">
@@ -95,8 +104,7 @@
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   <script src="bootstrap/bootstrap.min.js"></script>
-  <script src="knockout/knockout.js"></script>
-  <script src="knockout/knockout.mapping.min.js"></script>
+  <script src="vue/vue.min.js"></script>
   <script src="moment/moment.min.js"></script>
   <script src="view.js"></script>
   

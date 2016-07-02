@@ -1,30 +1,37 @@
 (function(){
   
-  var view = window.view = { };
+  var cherry = window.cherry = { };
   
-  view.pages = ['News', 'About', 'Contact' ];
-  view.section = ko.observable('');
+  // Define list of custom pages.
+  cherry.pages = ['News', 'About', 'Contact'];
   
-  view.section.subscribe(function (page) {
-    view.loadSection(page);
-  });
+  // Default to the first page
+  cherry.nav = cherry.pages[0];
   
-  view.loadSection = function (page) {
-    view.listPosts();
+  // TODO replace with vue event
+  //cherry.nav.subscribe(function (page) {
+    //cherry.loadSection(page);
+  //});
+  
+  // TODO rename to refreshView
+  cherry.loadSection = function (page) {
+    cherry.listPosts();
   };
   
-  view.post = ko.observable(null);
-  view.posts = ko.observableArray([]);
-  view.page = ko.observable(0);
-  view.prev = ko.observable(0);
-  view.next = ko.observable(0);
-  view.max = ko.observable(3);
+  // Store the post list data, and current post details
+  cherry.model = { };
+  //cherry.posts = [ ];
+  //cherry.page = 0;
+  //cherry.prev = 0;
+  //cherry.next = 0;
+  // Number of posts to list
+  cherry.model.max = 3;
   
   // This helper function performs a POST request
   // and calls back when the request completed.
   // The callback should receive parameters as
   // func (err, data)
-  view.PostRequest = function (url, data, callback) {
+  cherry.PostRequest = function (url, data, callback) {
     var r = new XMLHttpRequest(); 
     r.open("POST", url, true); 
     r.onreadystatechange = function () {
@@ -42,61 +49,65 @@
     r.send(JSON.stringify(data));
   }
 
-  view.listPosts = function () {
+  cherry.listPosts = function () {
     
-    var params = { page: view.page(), max: view.max() };
+    var params = { page: cherry.model.page || 0, max: cherry.model.max || 3 };
     
     //alert(JSON.stringify(params));
     
-    view.PostRequest("/api/list", params, function(err, data) {
+    cherry.PostRequest("/api/list", params, function(err, data) {
       if (err) {
         alert(err);
       }
       else {
-        
         // Parse the data into a js object
-        var result = JSON.parse(data);
-        view.page(result.page);
-        view.prev(result.prev);
-        view.next(result.next);
-
-        // read the returned view state
-        view.posts(ko.mapping.fromJS(result.posts)());
-        
+        var o = JSON.parse(data);
+        // Format dates
+        o.posts.forEach(function(post) {
+          post.dateFromNow = moment(post.date).fromNow();
+          post.dateCalendar = moment(post.date).calendar();
+          post.body = null;
+          post.loading = false;
+        });
+        cherry.model = o;
       }
     });
   }
 
-  view.loadPost = function (e) {
-    view.PostRequest("/api/get", { "key": e.key() }, function(err, data) {
+  cherry.loadPost = function (index) {
+    var e = cherry.model.posts[index];
+    e.loading = true;
+    cherry.PostRequest("/api/get", { "key": e.key }, function(err, data) {
       if (err) {
         alert(err);
       }
       else {
-        var er = ko.toJS(e);
-        er.body = data;
-        view.post(er);
-        //document.getElementById('permalink').setAttribute('href', '#'+e.key);
-        //document.getElementById('post').innerHTML = data;
+        e.body = data;
       }
+      e.loading = false;
     });
   }
   
-  view.clearPost = function () {
-    view.post(null);
+  cherry.goNewerPage = function () {
+    cherry.model.page = cherry.model.prev;
+    cherry.listPosts();
   }
   
-  view.goPrevPage = function () {
-    view.page(view.prev());
-    view.listPosts();
+  cherry.goOlderPage = function () {
+    cherry.model.page = cherry.model.next;
+    cherry.listPosts();
   }
   
-  view.goNextPage = function () {
-    view.page(view.next());
-    view.listPosts();
+  cherry.navigate = function (index) {
+    // TODO boundary check
+    cherry.nav = cherry.pages[index];
   }
   
-  ko.applyBindings(view);
-  view.section(view.pages[0]);
+  cherry.listPosts();
   
+  cherry.vue = new Vue({
+    el: '#cherry-app',
+    data: cherry
+  });
+    
 })();
