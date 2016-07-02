@@ -194,7 +194,7 @@ function namify(filelist) {
         
         if (config.leads) {
             var array = fs.readFileSync(path.join(__dirname, 'public/posts', file)).toString().split('\n');
-            if (array.length > 0) postItem.lead = array[0];
+            if (array.length > 0) postItem.lead = marked(array[0]);
         }
         
         result.push(postItem);
