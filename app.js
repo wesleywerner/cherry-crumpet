@@ -127,6 +127,25 @@ function ProcessRequest (req, res, form, callback) {
             });
             
         }
+        
+        else if (purl.pathname == '/api/page') {
+          
+          if (postdata.key == null) {
+            return callback({'message':'no page key given'});
+          }
+          
+          var filename = path.join(__dirname, 'public/pages', sanitize(postdata.key));
+          
+          ReadPost(res, filename, function (err, data) {
+              if (err) {
+                  return callback(err, null);
+              }
+              else {
+                  return callback(null, data);
+              }
+          });
+          
+        }
 
     }
     catch (err) {

@@ -106,6 +106,20 @@ Path: `/api/get`
 
 HTML rendered markdown.
 
+## Get Static Page
+
+Gets a markdown formatted page that lives under `public/pages`.
+
+Path: `/api/page`
+
+**Parameters**
+
+* `key`: The name of the page to get.
+
+**Returns**
+
+HTML rendered markdown.
+
 ## Searching (not implemented)
 
 Search post contents
