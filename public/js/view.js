@@ -99,16 +99,22 @@
     });
   }
   
+  // Scroll to top of page before reloading the post list
+  cherry.goToPage = function (page) {
+    zenscroll.to(document.body);
+    window.setTimeout(function(){
+      window.location.hash = '';
+      cherry.model.page = page;
+      cherry.listPosts();
+    }, 1000);
+  }
+
   cherry.goNewerPage = function () {
-    window.location.hash = '';
-    cherry.model.page = cherry.model.prev;
-    cherry.listPosts();
+    cherry.goToPage(cherry.model.prev);
   }
   
   cherry.goOlderPage = function () {
-    window.location.hash = '';
-    cherry.model.page = cherry.model.next;
-    cherry.listPosts();
+    cherry.goToPage(cherry.model.next);
   }
   
   cherry.navigate = function (index) {
