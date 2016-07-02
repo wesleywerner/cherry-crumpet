@@ -71,8 +71,8 @@
       <div class="heartbeat-loader"></div>
     </div>
 
-    <!-- Posts List -->
-    <div v-show="!loading" style="display:none">
+    <!-- Posts List and pagination buttons: visible when nav == News -->
+    <div v-show="nav == 'News' && !loading" style="display:none">
       <div class="jumbotron" v-for="post in model.posts">
         <h2><a v-bind:id="post.key" v-bind:href="'#'+post.key">{{ post.title }}</a> <small title="{{ post.dateCalendar }}">{{ post.dateFromNow }}</small></h2>
         <template v-if="post.body">
@@ -89,23 +89,30 @@
           </div>
         </template>
       </div>
+      <!-- Pagination Buttons -->
+      <div class="form-inline text-center">
+        <button class="btn btn-default"
+          v-bind:disabled="model.next === model.page" 
+          v-on:click="goOlderPage">
+          <i class="glyphicon glyphicon-chevron-left"></i> Older
+        </button>
+        <label class="text-muted text-center">Page {{ model.page + 1 }} </label>
+        <button class="btn btn-default"
+          v-bind:disabled="model.prev == model.page" 
+          v-on:click="goNewerPage">
+          <i class="glyphicon glyphicon-chevron-right"></i> Newer
+        </button>
+      </div>
     </div>
     
-    <!-- Pagination Buttons -->
-    <div v-show="!loading" class="form-inline text-center" style="display:none">
-      <button class="btn btn-default"
-        v-bind:disabled="model.next === model.page" 
-        v-on:click="goOlderPage">
-        <i class="glyphicon glyphicon-chevron-left"></i> Older
-      </button>
-      <label class="text-muted text-center">Page {{ model.page + 1 }} </label>
-      <button class="btn btn-default"
-        v-bind:disabled="model.prev == model.page" 
-        v-on:click="goNewerPage">
-        <i class="glyphicon glyphicon-chevron-right"></i> Newer
-      </button>
+    <!-- Static Pages: visible when nav is not News -->
+    <div v-show="nav != 'News' && !loading" style="display:none">
+      <div class="panel panel-default">
+        <div class="panel-heading">{{ nav }}</div>
+        <div class="panel-body">hello</div>
+      </div>
     </div>
-    
+
   </div>  <!-- /.container -->
 
   <footer class="blog-footer">
