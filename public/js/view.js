@@ -7,19 +7,12 @@
   
   // Default to the first page
   cherry.nav = cherry.pages[0];
-  
-  // TODO replace with vue event
-  //cherry.nav.subscribe(function (page) {
-    //cherry.loadSection(page);
-  //});
-  
-  // TODO rename to refreshView
-  cherry.loadSection = function (page) {
-    cherry.listPosts();
-  };
-  
+    
   // Store the post list data, and current post details
   cherry.model = { };
+  
+  // Store the current static page content
+  cherry.staticPage = null;
   
   // Flag when posts are loading
   cherry.loading = true;
@@ -99,6 +92,19 @@
     });
   }
   
+  cherry.loadPage = function (page) {
+    cherry.loading = true;
+    cherry.PostRequest("/api/page", { "key": page }, function(err, data) {
+      if (err) {
+        alert(err);
+      }
+      else {
+        cherry.staticPage = data;
+      }
+      cherry.loading = false;
+    });
+  }
+  
   // Scroll to top of page before reloading the post list
   cherry.goToPage = function (page) {
     zenscroll.to(document.body);
@@ -122,11 +128,26 @@
     cherry.nav = cherry.pages[index];
   }
   
-  cherry.listPosts();
+  cherry.handleNavChange = function (navValue) {
+    // The news page
+    if (navValue == cherry.pages[0]) {
+      cherry.listPosts();
+    }
+    else {
+      // A static page
+      cherry.loadPage (navValue);
+    }
+  }
   
   cherry.vue = new Vue({
     el: '#cherry-app',
-    data: cherry
+    data: cherry,
+    watch: {
+      'nav': cherry.handleNavChange
+    }
   });
+  
+  // On first load, trigger nav refresh
+  cherry.handleNavChange (cherry.nav);
     
 })();
