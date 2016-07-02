@@ -72,7 +72,7 @@
           {{{ post.body }}}
         </template>
         <template v-else>
-          <p>{{ post.lead }}</p>
+          {{{ post.lead }}}
           <p>
             <a class="btn btn-primary btn-lg" role="button" v-bind:href="'#'+post.key" v-bind:disabled="post.loading" v-on:click="loadPost($index)">Read more</a>
             <span class="text-muted" v-show="post.loading">Loading...</span>
@@ -84,11 +84,11 @@
     <!-- Pagination Buttons -->
     <div>
       <a class="btn btn-default" role="button" 
-        v-bind:disabled="model.page != model.prev" 
+        v-show="model.next != model.page" 
         v-on:click="goOlderPage" href="#">
         <i class="glyphicon glyphicon-chevron-left"></i> Older</a>
       <a class="btn btn-default" role="button" 
-        v-bind:disabled="model.page != model.next" 
+        v-show="model.prev != model.page" 
         v-on:click="goNewerPage" href="#">
         <i class="glyphicon glyphicon-chevron-right"></i> Newer</a>
       <div class="text-muted pull-right">Page {{ model.page + 1 }} </div>
