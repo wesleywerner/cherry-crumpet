@@ -147,10 +147,58 @@ function ProcessRequest (req, res, form, callback) {
           
         }
 
+        else if (purl.pathname == '/api/search') {
+          
+          if (postdata.query == null) {
+            return callback({'message':'no search query given'});
+          }
+          
+          var query = sanitize(postdata.query);
+          var searchPath = path.join(__dirname, 'public/posts');
+          
+          SearchPosts(res, searchPath, query, function (err, data) {
+              if (err) {
+                  return callback(err, null);
+              }
+              else {
+                  return callback(null, data);
+              }
+          });
+          
+        }
+
     }
     catch (err) {
         callback (err);
     }
+}
+
+
+function SearchPosts (res, searchPath, query, callback) {
+  // This is a beastly search, it is not async, loads chunks
+  // of text and will probably implode your server.
+  // You have been warned.
+  try {
+    var matches = [ ];
+    var filelist = fs.readdirSync(searchPath);
+    filelist.sort().reverse();
+    for (var i=0; i<filelist.length; i++) {
+      var postFile = path.join(searchPath, filelist[i]);
+      var postContents = fs.readFileSync(postFile, 'utf8');
+      // case insensitive search
+      var re = new RegExp(query, "gi");
+      var pos = postContents.search(re);
+      if (pos > -1) {
+        matches.push(filelist[i]);
+      }
+    }
+    // end of search
+    var result = namify(matches);
+    return callback(null, JSON.stringify(result));
+  }
+  catch (err) {
+    return callback(err);
+  }
 }
 
 function ReadPost (res, filename, callback) {
