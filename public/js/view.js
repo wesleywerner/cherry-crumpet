@@ -20,6 +20,10 @@
   // Number of posts to list
   cherry.model.max = 3;
   
+  // Stores the search query
+  cherry.searchQuery = '';
+  cherry.isSearchList = false;
+  
   // This helper function performs a POST request
   // and calls back when the request completed.
   // The callback should receive parameters as
@@ -45,6 +49,7 @@
   cherry.listPosts = function () {
     
     cherry.loading = true;
+    cherry.isSearchList = false;
     var params = { };
     params.page = cherry.model.page || 0;
     params.max = cherry.model.max || 3;
@@ -74,6 +79,41 @@
         }, 500);
         }
         
+      }
+    });
+  }
+
+  cherry.searchPosts = function () {
+    
+    if (cherry.searchQuery.length == 0) {
+      cherry.listPosts();
+      return;
+    }
+    
+    // flag we are viewing searches
+    cherry.isSearchList = true;
+    cherry.loading = true;
+    var params = { };
+    params.query = cherry.searchQuery;
+    
+    cherry.PostRequest("/api/search", params, function(err, data) {
+      cherry.loading = false;
+      if (err) {
+        alert(err);
+      }
+      else {
+        // Parse the data into a js object
+        var o = JSON.parse(data);
+        // Format dates
+        o.forEach(function(post) {
+          post.dateFromNow = moment(post.date).fromNow();
+          post.dateCalendar = moment(post.date).calendar();
+          post.body = null;
+          post.loading = false;
+        });
+        cherry.model.posts = o;
+        cherry.model.page = 0;
+        cherry.model.next = 0;
       }
     });
   }
