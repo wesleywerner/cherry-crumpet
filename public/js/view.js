@@ -21,6 +21,7 @@
   cherry.model.max = 3;
   
   // Stores the search query
+  cherry.searchEnabled = true;
   cherry.searchQuery = '';
   cherry.isSearchList = false;
   

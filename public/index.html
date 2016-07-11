@@ -55,7 +55,7 @@
           </ul>
           
           <!-- Search Form -->
-          <div class="navbar-form navbar-left" role="search">
+          <div class="navbar-form navbar-left" role="search" v-show="searchEnabled">
             <div class="form-group">
               <input type="text" class="form-control" placeholder="Search" v-model="searchQuery" v-on:keyup.enter="searchPosts">
             </div>
